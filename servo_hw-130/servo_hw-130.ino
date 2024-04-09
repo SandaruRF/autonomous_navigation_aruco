@@ -3,7 +3,7 @@ const int pingPin = 7;
 void setup() {
   Serial.begin(9600);
 }
-
+// need to change
 void loop() {
 
   long duration, inches, cm;
