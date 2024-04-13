@@ -10,6 +10,19 @@ ARUCO_DICT = {
     "DICT_4X4_1000": cv2.aruco.DICT_4X4_1000
 }
 
+directions = {
+    1: "East",
+    2: "South-East",
+    3: "South",
+    4: "South-West",
+    5: "West",
+    6: "North-West",
+    7: "North",
+    8: "North-East",
+    0: "STOP"
+}
+default_value =  "Unknown" #incase detect any other markerID
+
 def aruco_display(corners, ids, rejected, image):
     if len(corners) > 0:
         ids = ids.flatten()
@@ -29,8 +42,11 @@ def aruco_display(corners, ids, rejected, image):
             cX = int((topLeft[0] + bottomRight[0]) / 2.0)
             cY = int((topLeft[1] + bottomRight[1]) / 2.0)
             cv2.circle(image, (cX, cY), 4, (0,0,255), -1)
-
-            cv2.putText(image, str(markerID), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_PLAIN, 0.5, (0,255,0), 2)
+            
+            
+            direction = directions.get(markerID, default_value)
+            cv2.putText(image, str(markerID)+": ", (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
+            cv2.putText(image, direction, (topLeft[0] + 20, topLeft[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (0,0,255), 2)
             #print("[Inference] ArUco marker ID: {}".format(markerID))
 
     return image
