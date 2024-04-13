@@ -7,7 +7,6 @@ FPS = 0
 START_TIME = time.time()
 
 ARUCO_DICT = {
-    "DICT_4X4_50": cv2.aruco.DICT_4X4_50,
     "DICT_4X4_1000": cv2.aruco.DICT_4X4_1000
 }
 
@@ -32,7 +31,7 @@ def aruco_display(corners, ids, rejected, image):
             cv2.circle(image, (cX, cY), 4, (0,0,255), -1)
 
             cv2.putText(image, str(markerID), (topLeft[0], topLeft[1] - 10), cv2.FONT_HERSHEY_PLAIN, 0.5, (0,255,0), 2)
-            print("[Inference] ArUco marker ID: {}".format(markerID))
+            #print("[Inference] ArUco marker ID: {}".format(markerID))
 
     return image
 
@@ -42,7 +41,7 @@ arucoDict = cv2.aruco.Dictionary_get(ARUCO_DICT[aruco_type])
 
 arucoParams = cv2.aruco.DetectorParameters_create()
 
-picam2.Picamera2()
+picam2=Picamera2()
 picam2.preview_configuration.main.size = (640, 480)
 picam2.preview_configuration.main.format = "RGB888"
 picam2.preview_configuration.align()
@@ -57,18 +56,18 @@ while True:
 
     width = 1000
     height = int(width*(h/w))
-    image = cv2.resize(image, (width, height), interpolation=cv2.INER_CUBIC)
+    image = cv2.resize(image, (width, height), interpolation=cv2.INTER_CUBIC)
 
     corners, ids, rejected = cv2.aruco.detectMarkers(image, arucoDict, parameters = arucoParams)
 
     detected_markers = aruco_display(corners, ids, rejected, image)
 
-    cv2.imshow("Image", detected_markers)
-
     fps_text = 'FPS = {:.1f}'.format(FPS)
-    cv2.putText(image, fps_text, (24, 50), cv2.FONT_HERSHEY_DUPLEX, 1, (0,0,0), 1, cv2.LINE_AA)
-    FPS = 0.7*FPS + 0.3*(1 / (time.time() - START_TIME))
+    cv2.putText(image, fps_text, (24, 50), cv2.FONT_HERSHEY_DUPLEX, 1, (0,255,0), 1, cv2.LINE_AA)
+    FPS = 0.9*FPS + 0.1*(1 / (time.time() - START_TIME))
     START_TIME = time.time()
+    
+    cv2.imshow("Image", detected_markers)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
